@@ -10,7 +10,7 @@ distribuição ou utilização comercial deste código, total ou parcial, sem au
   <!-- Estrutura base da câmera com moldura | build: 2025-12-01-ec-a1 -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Luiz Antônio 2 anos</title>
+  <title>Moldura Fazendinha</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body {
@@ -26,7 +26,7 @@ distribuição ou utilização comercial deste código, total ou parcial, sem au
       height: 100vh;
       object-fit: cover;
     }
-    #overlay {
+    #overlay1, #overlay2 {
       position: absolute;
       inset: 0;
       max-width: 100vw;
@@ -53,6 +53,16 @@ distribuição ou utilização comercial deste código, total ou parcial, sem au
       font-size: 28px;
       cursor: pointer;
       box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+    #toggle-frame {
+      font-size: 11px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      line-height: 1.1;
+      padding: 0 6px;
     }
     #preview-container {
       position: absolute;
@@ -166,13 +176,15 @@ distribuição ou utilização comercial deste código, total ou parcial, sem au
 </head>
 <body data-ec="mfz-640-24-ecb">
   <video id="video" autoplay muted playsinline></video>
-  <img id="overlay" src="moldura.png" alt="Moldura" />
+  <img id="overlay1" src="moldura1.png" alt="Moldura 1" />
+  <img id="overlay2" src="moldura2.png" alt="Moldura 2" style="display:none;" />
 
   <div id="recording-indicator">🔴 REC 00:00</div>
   <div id="loading-message">Aguarde… estamos preparando seu vídeo 📽️✨</div>
 
   <div id="buttons">
     <button id="switch-camera" title="Trocar câmera">🔄</button>
+    <button id="toggle-frame" title="Trocar moldura">Trocar<br>moldura</button>
     <button id="capture" title="Tirar foto">📸</button>
     <button id="start-recording" title="Gravar vídeo">🎥</button>
     <button id="stop-recording" title="Parar gravação" style="display:none;">⏹</button>
@@ -227,10 +239,13 @@ distribuição ou utilização comercial deste código, total ou parcial, sem au
     const SECURITY_KEY = "EC-MOLDURA-2025-V1";
 
     const video = document.getElementById('video');
-    const overlay = document.getElementById('overlay');
+    const overlay1 = document.getElementById('overlay1');
+    const overlay2 = document.getElementById('overlay2');
+    let overlay = overlay1;
     const canvas = document.getElementById('canvas');
     const captureBtn = document.getElementById('capture');
     const switchCameraBtn = document.getElementById('switch-camera');
+    const toggleFrameBtn = document.getElementById('toggle-frame');
     const photoPreview = document.getElementById('photo-preview');
     const previewContainer = document.getElementById('preview-container');
     const saveBtn = document.getElementById('save-btn');
@@ -294,12 +309,25 @@ distribuição ou utilização comercial deste código, total ou parcial, sem au
       stream = await navigator.mediaDevices.getUserMedia(constraints);
       video.srcObject = stream;
       video.style.transform = usingFrontCamera ? 'scaleX(-1)' : 'scaleX(1)';
-      overlay.style.transform = 'scaleX(1)';
+      overlay1.style.transform = 'scaleX(1)';
+      overlay2.style.transform = 'scaleX(1)';
     }
 
     switchCameraBtn.onclick = () => {
       usingFrontCamera = !usingFrontCamera;
       startCamera();
+    };
+
+    toggleFrameBtn.onclick = () => {
+      if (overlay === overlay1) {
+        overlay1.style.display = 'none';
+        overlay2.style.display = 'block';
+        overlay = overlay2;
+      } else {
+        overlay2.style.display = 'none';
+        overlay1.style.display = 'block';
+        overlay = overlay1;
+      }
     };
 
     // FOTO
@@ -570,3 +598,4 @@ distribuição ou utilização comercial deste código, total ou parcial, sem au
   </script>
 </body>
 </html>
+
